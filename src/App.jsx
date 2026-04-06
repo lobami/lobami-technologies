@@ -26,20 +26,29 @@ const products = [
 ];
 
 const principles = [
-  'Diseño sobrio, claro y orientado a decisión.',
-  'Infraestructura simple, segura y sostenible.',
-  'Productos que resuelven un problema real antes de crecer por crecer.'
+  {
+    title: 'Diseño Sobrio',
+    desc: 'Orientado a la toma de decisiones críticas sin ruido innecesario.'
+  },
+  {
+    title: 'Infraestructura',
+    desc: 'Sistemas simples, seguros y diseñados para una escala sostenible.'
+  },
+  {
+    title: 'Criterio Técnico',
+    desc: 'Resolvemos problemas reales con una ejecución técnica de alto nivel.'
+  }
 ];
 
 export default function App() {
   return (
     <div className="site-shell">
+      <div className="bg-mesh" aria-hidden="true" />
+      
       <header className="topbar">
         <a className="brand" href="#inicio">
-          <span className="brand-mark" aria-hidden="true">
-            <span className="brand-block-lg" />
-          </span>
-          <strong>Lobami Technologies</strong>
+          <span className="brand-mark" aria-hidden="true" />
+          <strong>Lobami</strong>
         </a>
 
         <nav className="topnav">
@@ -53,78 +62,62 @@ export default function App() {
 
       <main>
         <section id="inicio" className="hero">
-          <span className="eyebrow">Studio snapshot</span>
-          <h1>Construimos productos claros, útiles y listos para operar.</h1>
+          <span className="eyebrow">Studio snapshot // 2026</span>
+          <h1>Evolucionamos la forma de construir software.</h1>
           <p className="hero-text">
-            Diseñamos experiencias digitales que combinan criterio de producto, ejecución técnica
-            sólida y una estética más profesional que ruidosa.
+            Lobami Technologies diseña experiencias digitales que combinan criterio de producto con una ejecución técnica de grado industrial.
           </p>
 
           <div className="hero-actions">
             <a className="button button-primary" href="#productos">
-              Ver productos
+              Ver portafolio
             </a>
             <a className="button button-secondary" href="mailto:hola@lobami.lat">
-              Hablar con nosotros
+              Agendar consulta
             </a>
           </div>
         </section>
 
         <section id="productos" className="section">
-          <div className="section-heading">
-            <span className="eyebrow">Portafolio</span>
-            <h2>Productos en operación</h2>
-            <p>
-              Cada producto responde a un contexto distinto, pero comparte la misma idea central:
-              ayudar a la gente a trabajar, decidir o avanzar con menos fricción.
-            </p>
-          </div>
+          <div className="section-container">
+            <div className="section-heading">
+              <span className="eyebrow">Deployments</span>
+              <h2>Productos activos</h2>
+              <p>
+                Cada producto es una respuesta técnica a un problema de negocio real, 
+                optimizando procesos y reduciendo fricción operativa.
+              </p>
+            </div>
 
-          <div className="product-grid">
-            {products.map((product) => (
-              <article key={product.name} className="product-card">
-                <div className="product-header">
-                  <div>
-                    <span className="product-kind">{product.kind}</span>
-                    <h3>{product.name}</h3>
-                  </div>
-                </div>
-
-                <p>{product.description}</p>
-
-                <ul>
-                  {product.bullets.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-
-                <div className="product-header">
-                  <a href={product.href} target="_blank" rel="noreferrer">
-                    Visitar {product.name}
+            <div className="product-grid">
+              {products.map((product) => (
+                <article key={product.name} className="product-card">
+                  <h3>{product.name}</h3>
+                  <p>{product.description}</p>
+                  <a href={product.href} className="product-link" target="_blank" rel="noreferrer">
+                    Launch
                   </a>
-                </div>
-              </article>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
-        <section id="principios" className="section section-split">
-          <div className="section-heading">
-            <span className="eyebrow">Cómo trabajamos</span>
-            <h2>Menos ruido, más criterio.</h2>
-            <p>
-              Preferimos soluciones claras, stacks mantenibles y decisiones de producto que sí
-              sobrevivan cuando el proyecto crece.
-            </p>
-          </div>
+        <section id="principios" className="section">
+          <div className="section-container">
+            <div className="section-heading">
+              <span className="eyebrow">Nuestros Pilares</span>
+              <h2>Rigor técnico y estético.</h2>
+            </div>
 
-          <div className="principles-card">
-            {principles.map((item) => (
-              <div key={item} className="principle-row">
-                <span className="principle-dot" />
-                <p>{item}</p>
-              </div>
-            ))}
+            <div className="principles-grid">
+              {principles.map((item) => (
+                <div key={item.title} className="principle-item">
+                  <h4>{item.title}</h4>
+                  <p>{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </main>
@@ -134,14 +127,14 @@ export default function App() {
           <div className="footer-content">
             <div className="footer-brand">
               <strong>Lobami Technologies</strong>
-              <span>Diseño, producto e infraestructura para proyectos digitales bien hechos.</span>
             </div>
             <a className="footer-contact" href="mailto:hola@lobami.lat">hola@lobami.lat</a>
           </div>
           
           <div className="footer-bottom">
+            <span>© 2026 Digital Production Unit</span>
             <div className="love-mark">
-              Hecho con <span className="heart">❤️</span> en Lobami Technologies
+              Hecho con <div className="heart-icon" /> en Lobami
             </div>
           </div>
         </div>
