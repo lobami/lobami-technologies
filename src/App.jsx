@@ -117,7 +117,7 @@ export default function App() {
           <div className="footer-bottom">
             <span>© 2026</span>
             <div className="love-mark">
-              HECHO CON <div className="heart-pulse" /> WITH LOVE EN LOBAMI
+              HECHO CON <div className="heart-pulse" /> WITH LOVE EN LOBAMI 🏠
             </div>
           </div>
         </div>
