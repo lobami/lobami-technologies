@@ -115,9 +115,9 @@ export default function App() {
           </div>
           
           <div className="footer-bottom">
-            <span style={{ color: 'var(--tech-muted)' }}>© 2026</span>
+            <span>© 2026</span>
             <div className="love-mark">
-              Hecho con <div className="heart-pulse" /> en Lobami
+              HECHO CON <div className="heart-pulse" /> WITH LOVE EN LOBAMI
             </div>
           </div>
         </div>
