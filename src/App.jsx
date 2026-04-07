@@ -62,11 +62,44 @@ export default function App() {
 
       <main>
         <section id="inicio" className="hero">
-          <span className="section-label">Engineering better software</span>
-          <h1>Construimos productos digitales de alto rendimiento.</h1>
-          <p className="hero-text">
-            Combinamos criterio de producto con ejecución técnica de grado industrial para crear experiencias que escalan.
-          </p>
+          <div className="hero-inner">
+            <div className="hero-content">
+              <span className="section-label">Engineering better software</span>
+              <h1>Construimos productos digitales de alto rendimiento.</h1>
+              <p className="hero-text">
+                Combinamos criterio de producto con ejecución técnica de grado industrial para crear experiencias que escalan.
+              </p>
+              <div className="hero-actions">
+                <a href="#productos" className="cta-primary">Ver proyectos</a>
+                <a href="mailto:hola@lobami.lat" className="cta-secondary">Hablemos →</a>
+              </div>
+            </div>
+            <div className="hero-visual" aria-hidden="true">
+              {products.map((p, i) => (
+                <div key={p.name} className={`hero-card hero-card-${i}`}>
+                  <span className="hero-card-tag">{p.tag}</span>
+                  <strong className="hero-card-name">{p.name}</strong>
+                  <span className="hero-card-kind">{p.kind}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="hero-stats">
+            <div className="stat-item">
+              <strong>3</strong>
+              <span>Productos activos</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat-item">
+              <strong>6+</strong>
+              <span>Años de experiencia</span>
+            </div>
+            <div className="stat-divider" />
+            <div className="stat-item">
+              <strong>100%</strong>
+              <span>Productos propios</span>
+            </div>
+          </div>
         </section>
 
         <section id="productos" className="section-products">
