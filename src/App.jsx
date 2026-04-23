@@ -346,24 +346,28 @@ function WorkVisualMobile({ accent }) {
   );
 }
 
-function WorkVisualCode({ accent }) {
+function WorkVisualNudo({ accent }) {
+  const cols = [
+    { label: 'Por hacer', items: ['Diseño onboarding', 'API de equipos'] },
+    { label: 'En progreso', items: ['Vista kanban'] },
+    { label: 'Listo', items: ['Auth', 'Dashboard', 'Notifs'] },
+  ];
   return (
-    <div style={{ width: '80%', background: 'var(--bg-0)', border: '1px solid var(--border-1)', borderRadius: 8, padding: 16, fontFamily: 'var(--mono)', fontSize: 12, lineHeight: 1.7 }}>
-      <div style={{ color: 'var(--text-3)' }}>// deploy.ts</div>
-      <div>
-        <span style={{ color: '#c9a0ff' }}>const</span>
-        <span style={{ color: 'var(--text-0)' }}> pipeline </span>
-        <span style={{ color: 'var(--text-2)' }}>= </span>
-        <span style={{ color: '#c9a0ff' }}>await </span>
-        <span style={{ color: accent }}>lobami</span>
-        <span style={{ color: 'var(--text-1)' }}>.deploy({'{'}</span>
+    <div style={{ width: '88%', background: 'var(--bg-0)', border: '1px solid var(--border-1)', borderRadius: 8, padding: 14, fontFamily: 'var(--mono)', fontSize: 11 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+        <span style={{ color: 'var(--text-3)', fontSize: 10 }}>nudo.my — tablero</span>
+        <span style={{ width: 6, height: 6, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, display: 'inline-block' }} />
       </div>
-      <div style={{ paddingLeft: 16 }}>region: <span style={{ color: 'var(--success)' }}>'us-east-1'</span>,</div>
-      <div style={{ paddingLeft: 16 }}>edge: <span style={{ color: '#c9a0ff' }}>true</span>,</div>
-      <div style={{ paddingLeft: 16 }}>cdn: <span style={{ color: 'var(--success)' }}>'cloudfront'</span>,</div>
-      <div style={{ paddingLeft: 16 }}>db: <span style={{ color: 'var(--success)' }}>'rds-postgres'</span></div>
-      <div>{'})'}</div>
-      <div style={{ color: 'var(--text-3)', marginTop: 8 }}>→ <span style={{ color: 'var(--success)' }}>ok</span> · 2m 14s</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+        {cols.map(col => (
+          <div key={col.label}>
+            <div style={{ color: 'var(--text-3)', fontSize: 9, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{col.label}</div>
+            {col.items.map(item => (
+              <div key={item} style={{ background: 'var(--bg-2)', border: '1px solid var(--border-1)', borderRadius: 4, padding: '6px 8px', marginBottom: 4, color: 'var(--text-1)', fontSize: 10 }}>{item}</div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -393,13 +397,13 @@ const cases = [
     viz: 'mobile',
   },
   {
-    id: 'helios',
-    tag: 'INFRA · 2025',
-    title: 'Helios Labs — pipeline de deploys multi-región',
-    desc: 'Migración de Heroku a AWS con IaC completo. Reducción de costos del 42% y zero-downtime desde el día uno.',
-    stack: ['Terraform', 'AWS', 'Go'],
-    accent: '#7ec27e',
-    viz: 'code',
+    id: 'nudo',
+    tag: 'PRODUCTIVITY · 2025',
+    title: 'Nudo — gestión visual de trabajo',
+    desc: 'Organización de trabajo con claridad, seguimiento visual y flujo de equipo ordenado. Tableros, tareas y contexto en un solo lugar, sin ruido.',
+    stack: ['Next.js', 'TypeScript', 'Postgres'],
+    accent: '#c9a0ff',
+    viz: 'nudo',
   },
 ];
 
@@ -426,7 +430,7 @@ function Work() {
               }}>
                 {c.viz === 'dashboard' && <WorkVisualDashboard accent={c.accent} title={c.vizTitle} metrics={c.vizMetrics} labels={c.vizLabels} />}
                 {c.viz === 'mobile' && <WorkVisualMobile accent={c.accent} />}
-                {c.viz === 'code' && <WorkVisualCode accent={c.accent} />}
+                {c.viz === 'nudo' && <WorkVisualNudo accent={c.accent} />}
               </div>
               <div className="work-body">
                 <div className="work-meta"><span>{c.tag}</span></div>
