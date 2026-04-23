@@ -1,529 +1,761 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import './styles.css';
 
-const products = [
-  {
-    name: 'Saldy',
-    kind: 'Finanzas personales',
-    href: 'https://saldy.xyz',
-    description:
-      'Planeación por quincena, calendario de pagos, metas y una lectura clara del flujo personal.',
-    tag: 'FINTECH',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M12 6v6l4 2"/>
-        <path d="M16 8l2-2"/>
-        <path d="M8 8L6 6"/>
-      </svg>
-    )
-  },
-  {
-    name: 'Ruta Abierta',
-    kind: 'Comunidad y exploración',
-    href: 'https://rutaabierta.xyz',
-    description:
-      'Plataforma para descubrir rutas y experiencias alrededor del movimiento y la aventura.',
-    tag: 'COMMUNITY',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-        <circle cx="12" cy="10" r="2"/>
-      </svg>
-    )
-  },
-  {
-    name: 'Nudo',
-    kind: 'Gestión visual de trabajo',
-    href: 'https://nudo.my',
-    description:
-      'Organización de trabajo con claridad, seguimiento visual y flujo de equipo ordenado.',
-    tag: 'PRODUCTIVITY',
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1"/>
-        <rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="14" y="14" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/>
-        <path d="M10 6.5h4"/>
-        <path d="M17.5 10v4"/>
-        <path d="M6.5 10v4"/>
-        <path d="M10 17.5h4"/>
-      </svg>
-    )
-  }
-];
-
-const principles = [
-  {
-    title: 'Diseño Crítico',
-    desc: 'Orientado a la toma de decisiones sin ruido innecesario.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-        <polyline points="2 17 12 22 22 17"/>
-        <polyline points="2 12 12 17 22 12"/>
-      </svg>
-    )
-  },
-  {
-    title: 'Infraestructura',
-    desc: 'Sistemas seguros y diseñados para una escala sostenible.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-        <line x1="8" y1="21" x2="16" y2="21"/>
-        <line x1="12" y1="17" x2="12" y2="21"/>
-      </svg>
-    )
-  },
-  {
-    title: 'Ejecución',
-    desc: 'Resolvemos problemas reales con ingeniería de alto nivel.',
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 18 22 12 16 6"/>
-        <polyline points="8 6 2 12 8 18"/>
-      </svg>
-    )
-  }
-];
-
-const processSteps = [
-  {
-    num: '01',
-    title: 'Entender',
-    desc: 'Identificamos el problema real antes de escribir una línea de código.'
-  },
-  {
-    num: '02',
-    title: 'Diseñar',
-    desc: 'Creamos interfaces que comunican claridad y generan confianza.'
-  },
-  {
-    num: '03',
-    title: 'Construir',
-    desc: 'Desarrollamos con stack moderno, tests y deploy automatizado.'
-  },
-  {
-    num: '04',
-    title: 'Medir',
-    desc: 'Analizamos métricas para iterar y mejorar continuamente.'
-  }
-];
-
-const highlights = [
-  {
-    text: 'Productos propios, no contratos de outsourcing'
-  },
-  {
-    text: 'Stack moderno'
-  },
-  {
-    text: 'Enfoque en UX y rendimiento'
-  }
-];
-
-function ArrowIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+// =========== ICONS ===========
+const Icon = {
+  Code: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6"/>
+      <polyline points="8 6 2 12 8 18"/>
+    </svg>
+  ),
+  Stack: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+      <polyline points="2 17 12 22 22 17"/>
+      <polyline points="2 12 12 17 22 12"/>
+    </svg>
+  ),
+  Cloud: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+    </svg>
+  ),
+  Shield: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  ),
+  Zap: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+  ),
+  Arrow: () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="5" y1="12" x2="19" y2="12"/>
       <polyline points="12 5 19 12 12 19"/>
     </svg>
-  );
-}
-
-function LaunchIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-      <polyline points="15 3 21 3 21 9"/>
-      <line x1="10" y1="14" x2="21" y2="3"/>
+  ),
+  ArrowUpRight: () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="7" y1="17" x2="17" y2="7"/>
+      <polyline points="7 7 17 7 17 17"/>
     </svg>
-  );
-}
+  ),
+};
 
-function CheckIcon() {
+// =========== NAV ===========
+function Nav({ onOpenPalette }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
+    <nav className="nav">
+      <div className="container nav-inner">
+        <a href="#" className="logo">
+          <span className="logo-mark">L</span>
+          <span>lobami<span style={{ color: 'var(--text-3)' }}>.lat</span></span>
+        </a>
+        <div className="nav-links">
+          <a href="#services"><span className="idx">01</span> servicios</a>
+          <a href="#work"><span className="idx">02</span> trabajo</a>
+          <a href="#process"><span className="idx">03</span> proceso</a>
+          <a href="#stack"><span className="idx">04</span> stack</a>
+        </div>
+        <div className="nav-cta">
+          <button className="cmd-k" onClick={onOpenPalette}>
+            <span>buscar</span>
+            <kbd>⌘K</kbd>
+          </button>
+          <a href="#contact" className="btn btn-primary">
+            iniciar proyecto <Icon.Arrow />
+          </a>
+        </div>
+      </div>
+    </nav>
   );
 }
 
-function GithubIcon() {
+// =========== TERMINAL ===========
+function Terminal({ typed }) {
+  const full = 'npx create-lobami-app my-project';
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-    </svg>
+    <div className="terminal">
+      <div className="terminal-head">
+        <span className="tdot r" />
+        <span className="tdot y" />
+        <span className="tdot g" />
+        <span className="terminal-title">~/lobami — zsh — 92×24</span>
+      </div>
+      <div className="terminal-body">
+        <div className="tline">
+          <span className="tprompt">$</span>
+          <span>{typed}<span className="tcursor" /></span>
+        </div>
+        {typed.length >= full.length && (
+          <>
+            <div className="tline" style={{ marginTop: 12 }}>
+              <span className="tcomment">// inicializando stack productivo...</span>
+            </div>
+            <div className="tline">
+              <span style={{ color: 'var(--success)' }}>✓</span>
+              <span>Next.js 15 + TypeScript configurado</span>
+            </div>
+            <div className="tline">
+              <span style={{ color: 'var(--success)' }}>✓</span>
+              <span>Postgres + Drizzle ORM listo</span>
+            </div>
+            <div className="tline">
+              <span style={{ color: 'var(--success)' }}>✓</span>
+              <span>CI/CD conectado a <span className="tpath">main</span></span>
+            </div>
+            <div className="tline">
+              <span style={{ color: 'var(--success)' }}>✓</span>
+              <span>Observabilidad y logs centralizados</span>
+            </div>
+            <div className="tline" style={{ marginTop: 12 }}>
+              <span className="tprompt">→</span>
+              <span>
+                <span className="tkey">ready</span> en <span className="tnum">2.4s</span>{' '}
+                — <span className="tstring">"vamos al grano"</span>
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
-function TwitterIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-  );
-}
-
-function LinkedinIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-    </svg>
-  );
-}
-
-function SunIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/>
-      <line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/>
-      <line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
-  );
-}
-
-function MoonIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-  );
-}
-
-function ProductMockup({ product }) {
-  if (product.name === 'Saldy') {
-    return (
-      <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg" className="product-mockup-svg">
-        <rect width="400" height="280" rx="12" fill="var(--mockup-bg)"/>
-        <rect x="20" y="20" width="360" height="40" rx="8" fill="var(--mockup-surface)"/>
-        <text x="40" y="48" fontFamily="var(--font-sora)" fontSize="14" fontWeight="700" fill="var(--mockup-text)">Saldy</text>
-        <rect x="300" y="28" width="60" height="24" rx="6" fill="var(--tech-green)" fillOpacity="0.2"/>
-        <text x="330" y="45" fontFamily="var(--font-manrope)" fontSize="11" fontWeight="600" fill="var(--tech-green)" textAnchor="middle">+$1,240</text>
-        
-        <rect x="20" y="80" width="165" height="90" rx="8" fill="var(--mockup-surface)"/>
-        <text x="35" y="100" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">Balance</text>
-        <text x="35" y="130" fontFamily="var(--font-sora)" fontSize="22" fontWeight="800" fill="var(--mockup-text)">$12,450</text>
-        
-        <rect x="200" y="80" width="180" height="90" rx="8" fill="var(--mockup-surface)"/>
-        <text x="215" y="100" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">Goal</text>
-        <rect x="215" y="115" width="150" height="8" rx="4" fill="var(--mockup-border)"/>
-        <rect x="215" y="115" width="105" height="8" rx="4" fill="var(--tech-blue-bright)"/>
-        <text x="215" y="145" fontFamily="var(--font-manrope)" fontSize="12" fontWeight="600" fill="var(--mockup-text)">70% complete</text>
-        
-        <rect x="20" y="185" width="360" height="75" rx="8" fill="var(--mockup-surface)"/>
-        <text x="35" y="205" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">Upcoming</text>
-        <rect x="35" y="215" width="100" height="30" rx="6" fill="var(--mockup-accent)" fillOpacity="0.1"/>
-        <text x="85" y="234" fontFamily="var(--font-manrope)" fontSize="11" fontWeight="600" fill="var(--mockup-accent)" textAnchor="middle">15th · $2,400</text>
-        <rect x="145" y="215" width="100" height="30" rx="6" fill="var(--mockup-accent)" fillOpacity="0.1"/>
-        <text x="195" y="234" fontFamily="var(--font-manrope)" fontSize="11" fontWeight="600" fill="var(--mockup-accent)" textAnchor="middle">30th · $2,400</text>
-      </svg>
-    );
-  }
-  
-  if (product.name === 'Ruta Abierta') {
-    return (
-      <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg" className="product-mockup-svg">
-        <rect width="400" height="280" rx="12" fill="var(--mockup-bg)"/>
-        
-        <rect x="20" y="20" width="360" height="50" rx="8" fill="var(--mockup-surface)"/>
-        <circle cx="50" cy="45" r="15" fill="var(--tech-cyan)" fillOpacity="0.2"/>
-        <circle cx="50" cy="45" r="8" stroke="var(--tech-cyan)" strokeWidth="2"/>
-        <text x="75" y="40" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">Discover</text>
-        <text x="75" y="55" fontFamily="var(--font-sora)" fontSize="14" fontWeight="700" fill="var(--mockup-text)">Rutas Cercanas</text>
-        
-        <rect x="20" y="85" width="170" height="100" rx="8" fill="var(--mockup-surface)"/>
-        <rect x="20" y="85" width="170" height="50" rx="8" fill="var(--tech-blue)" fillOpacity="0.15"/>
-        <path d="M60 105 L90 135 L140 85" stroke="var(--tech-blue-bright)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="60" cy="105" r="5" fill="var(--tech-cyan)"/>
-        <circle cx="140" cy="85" r="5" fill="var(--tech-cyan)"/>
-        <text x="30" y="155" fontFamily="var(--font-manrope)" fontSize="11" fontWeight="600" fill="var(--mockup-text)">Cerro del Borrego</text>
-        <text x="30" y="170" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">5.2 km · Moderada</text>
-        
-        <rect x="210" y="85" width="170" height="100" rx="8" fill="var(--mockup-surface)"/>
-        <rect x="210" y="85" width="170" height="50" rx="8" fill="var(--tech-green)" fillOpacity="0.15"/>
-        <path d="M250 105 L280 135 L330 85" stroke="var(--tech-green)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="250" cy="105" r="5" fill="var(--tech-cyan)"/>
-        <circle cx="330" cy="85" r="5" fill="var(--tech-cyan)"/>
-        <text x="220" y="155" fontFamily="var(--font-manrope)" fontSize="11" fontWeight="600" fill="var(--mockup-text)">Cañón del Sumidero</text>
-        <text x="220" y="170" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">12.8 km · Alta</text>
-        
-        <rect x="20" y="200" width="360" height="60" rx="8" fill="var(--mockup-surface)"/>
-        <circle cx="50" cy="230" r="15" fill="var(--tech-purple)" fillOpacity="0.2"/>
-        <text x="75" y="225" fontFamily="var(--font-manrope)" fontSize="10" fill="var(--mockup-muted)">Comunidad</text>
-        <text x="75" y="240" fontFamily="var(--font-sora)" fontSize="13" fontWeight="700" fill="var(--mockup-text)">247 exploradores activos</text>
-      </svg>
-    );
-  }
-  
-  return (
-    <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg" className="product-mockup-svg">
-      <rect width="400" height="280" rx="12" fill="var(--mockup-bg)"/>
-      
-      <rect x="20" y="20" width="360" height="40" rx="8" fill="var(--mockup-surface)"/>
-      <text x="40" y="48" fontFamily="var(--font-sora)" fontSize="14" fontWeight="700" fill="var(--mockup-text)">Nudo Board</text>
-      <rect x="280" y="30" width="80" height="20" rx="4" fill="var(--tech-blue)" fillOpacity="0.2"/>
-      <text x="320" y="44" fontFamily="var(--font-manrope)" fontSize="10" fontWeight="600" fill="var(--tech-blue-bright)" textAnchor="middle">Sprint 14</text>
-      
-      <rect x="20" y="75" width="110" height="185" rx="8" fill="var(--mockup-surface)"/>
-      <text x="35" y="95" fontFamily="var(--font-manrope)" fontSize="10" fontWeight="700" fill="var(--mockup-muted)">TO DO</text>
-      <rect x="30" y="110" width="90" height="35" rx="4" fill="var(--mockup-accent)" fillOpacity="0.1"/>
-      <rect x="38" y="120" width="50" height="6" rx="3" fill="var(--mockup-accent)"/>
-      <rect x="38" y="132" width="74" height="4" rx="2" fill="var(--mockup-border)"/>
-      <rect x="30" y="155" width="90" height="35" rx="4" fill="var(--mockup-accent)" fillOpacity="0.1"/>
-      <rect x="38" y="165" width="40" height="6" rx="3" fill="var(--mockup-accent)"/>
-      <rect x="38" y="177" width="74" height="4" rx="2" fill="var(--mockup-border)"/>
-      
-      <rect x="145" y="75" width="110" height="185" rx="8" fill="var(--mockup-surface)"/>
-      <text x="160" y="95" fontFamily="var(--font-manrope)" fontSize="10" fontWeight="700" fill="var(--mockup-muted)">IN PROGRESS</text>
-      <rect x="155" y="110" width="90" height="50" rx="4" fill="var(--tech-blue)" fillOpacity="0.15"/>
-      <rect x="163" y="120" width="60" height="6" rx="3" fill="var(--tech-blue-bright)"/>
-      <rect x="163" y="132" width="74" height="4" rx="2" fill="var(--mockup-border)"/>
-      <rect x="163" y="142" width="50" height="4" rx="2" fill="var(--mockup-border)"/>
-      <circle cx="175" cy="155" r="8" fill="var(--tech-blue-bright)" fillOpacity="0.3"/>
-      <circle cx="175" cy="155" r="4" fill="var(--tech-blue-bright)"/>
-      
-      <rect x="270" y="75" width="110" height="185" rx="8" fill="var(--mockup-surface)"/>
-      <text x="285" y="95" fontFamily="var(--font-manrope)" fontSize="10" fontWeight="700" fill="var(--tech-green)">DONE</text>
-      <rect x="280" y="110" width="90" height="35" rx="4" fill="var(--tech-green)" fillOpacity="0.1"/>
-      <rect x="288" y="120" width="45" height="6" rx="3" fill="var(--tech-green)"/>
-      <rect x="288" y="132" width="74" height="4" rx="2" fill="var(--mockup-border)"/>
-      <path d="M315 142 L320 147 L330 137" stroke="var(--tech-green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
-}
-
-export default function App() {
-  const [theme, setTheme] = useState('dark');
-  const [loaded, setLoaded] = useState(false);
+// =========== HERO ===========
+function Hero() {
+  const [typed, setTyped] = useState('');
+  const full = 'npx create-lobami-app my-project';
 
   useEffect(() => {
-    setLoaded(true);
-    const savedTheme = localStorage.getItem('lobami-theme');
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTyped(full.slice(0, i));
+      if (i >= full.length) clearInterval(id);
+    }, 55);
+    return () => clearInterval(id);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('lobami-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
   return (
-    <div className="site-shell">
-      <div className="bg-mesh" aria-hidden="true" />
-      <div className="bg-grid" aria-hidden="true" />
-      
-      <header className="topbar">
-        <a className="brand" href="#inicio">
-          <span className="brand-mark" aria-hidden="true" />
-          <strong>Lobami</strong>
-        </a>
+    <section className="hero">
+      <div className="container">
+        <div className="hero-badge">
+          <span className="pill">v2.0</span>
+          <span>Aceptando proyectos para Q3 2026</span>
+          <Icon.Arrow />
+        </div>
 
-        <nav className="topnav">
-          <a href="#productos">Productos</a>
-          <a href="#nosotros">Nosotros</a>
-          <a href="#proceso">Proceso</a>
-          <a href="#principios">Principios</a>
-          <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
-          <a className="nav-cta" href="mailto:hola@lobami.lat">
-            Contacto
+        <h1>
+          Ingeniería que <span className="serif">piensa</span> antes de codear.
+        </h1>
+
+        <p className="hero-sub">
+          Lobami es un estudio técnico que diseña, construye y escala software para empresas
+          que viven o mueren por su producto. Backends sólidos, interfaces rápidas, entregas sin drama.
+        </p>
+
+        <div className="hero-cta">
+          <a href="#contact" className="btn btn-primary">
+            Agendar llamada <Icon.ArrowUpRight />
           </a>
-        </nav>
-      </header>
+          <a href="#work" className="btn btn-secondary">
+            Ver portafolio
+          </a>
+        </div>
 
-      <main>
-        <section id="inicio" className="hero">
-          <div className="hero-inner">
-            <div className={`hero-content ${loaded ? 'animate-in' : ''}`}>
-              <span className="section-label">Engineering better software</span>
-              <h1>Construimos productos digitales de alto rendimiento.</h1>
-              <p className="hero-text">
-                Combinamos criterio de producto con ejecución técnica de grado industrial para crear experiencias que escalan.
-              </p>
-              <div className="hero-actions">
-                <a href="#productos" className="cta-primary">
-                  Ver proyectos <ArrowIcon />
-                </a>
-                <a href="mailto:hola@lobami.lat" className="cta-secondary">
-                  Hablemos <span>→</span>
-                </a>
-              </div>
-            </div>
-            <div className={`hero-visual ${loaded ? 'animate-in' : ''}`} style={{ animationDelay: '150ms' }}>
-              {products.map((p, i) => (
-                <div key={p.name} className={`hero-card hero-card-${i}`}>
-                  <div className="hero-card-header">
-                    <span className="hero-card-icon">{p.icon}</span>
-                    <span className="hero-card-tag">{p.tag}</span>
-                  </div>
-                  <strong className="hero-card-name">{p.name}</strong>
-                  <span className="hero-card-kind">{p.kind}</span>
-                  <a href={p.href} className="hero-card-link" target="_blank" rel="noreferrer">
-                    Visitar <ArrowIcon />
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className={`hero-stats ${loaded ? 'animate-in' : ''}`} style={{ animationDelay: '300ms' }}>
-            <div className="stat-item">
-              <strong>3</strong>
-              <span>Productos activos</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <strong>6+</strong>
-              <span>Años de experiencia</span>
-            </div>
-            <div className="stat-divider" />
-            <div className="stat-item">
-              <strong>100%</strong>
-              <span>Productos propios</span>
-            </div>
-          </div>
-        </section>
+        <Terminal typed={typed} />
+      </div>
 
-        <section id="productos" className="section-products">
-          <div className="section-container">
-            <span className="section-label">Selected Works</span>
-            <div className="product-featured-grid">
-              {products.map((product, i) => (
-                <article key={product.name} className="product-card" style={{ animationDelay: `${i * 100}ms` }}>
-                  <div className="product-mockup">
-                    <ProductMockup product={product} />
-                  </div>
-                  <div className="product-card-content">
-                    <span className="product-tag">{product.tag}</span>
-                    <h3>{product.name}</h3>
-                    <p>{product.description}</p>
-                    <a href={product.href} className="product-cta" target="_blank" rel="noreferrer">
-                      Launch Product <LaunchIcon />
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+      <div className="container logos">
+        <div className="logos-label">// productos que hemos construido</div>
+        <div className="logos-row" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+          <a className="logo-item" href="https://saldy.xyz" target="_blank" rel="noreferrer" style={{ display: 'flex', flexDirection: 'column', gap: 4, textAlign: 'center' }}>
+            <span style={{ fontSize: 17, fontWeight: 600 }}>◆ Saldy</span>
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>FINTECH · Finanzas personales</span>
+          </a>
+          <a className="logo-item" href="https://rutaabierta.xyz" target="_blank" rel="noreferrer" style={{ display: 'flex', flexDirection: 'column', gap: 4, textAlign: 'center' }}>
+            <span style={{ fontSize: 17, fontWeight: 600 }}>◉ Ruta Abierta</span>
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>COMMUNITY · Exploración</span>
+          </a>
+          <a className="logo-item" href="https://nudo.my" target="_blank" rel="noreferrer" style={{ display: 'flex', flexDirection: 'column', gap: 4, textAlign: 'center' }}>
+            <span style={{ fontSize: 17, fontWeight: 600 }}>⬡ Nudo</span>
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>PRODUCTIVITY · Gestión de trabajo</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-        <section id="nosotros" className="section-about">
-          <div className="section-container">
-            <div className="about-grid">
-              <div className="about-image">
-                <div className="about-image-content">
-                  <svg width="80" height="80" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="128" height="128" rx="24" fill="rgba(0,118,206,0.2)"/>
-                    <path d="M40 32V96H56V72H72V96H88V32H72V56H56V32H40Z" fill="#00a3ff"/>
-                    <circle cx="96" cy="40" r="12" fill="#00fbff" fill-opacity="0.8"/>
-                  </svg>
-                  <p>Diseño, producto e infraestructura</p>
-                </div>
-              </div>
-              <div className="about-content">
-                <span className="section-label">About Us</span>
-                <h2>Somos un equipo enfocado en crear tecnología que importa.</h2>
-                <p>
-                  En Lobami Technologies construimos productos digitales propios, 
-                  lo que nos permite mantener control total sobre la calidad y la visión de cada proyecto.
-                </p>
-                <p>
-                  No hacemos outsourcing. Cada línea de código, cada decisión de diseño 
-                  y cada actualización está pensada para crear valor real a nuestros usuarios.
-                </p>
-                <div className="about-highlights">
-                  {highlights.map((h, i) => (
-                    <div key={i} className="about-highlight">
-                      <div className="about-highlight-icon">
-                        <CheckIcon />
-                      </div>
-                      <span className="about-highlight-text">{h.text}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+// =========== SERVICES ===========
+function Services() {
+  return (
+    <section className="section" id="services">
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="section-label">01 — Servicios</div>
+            <h2 className="section-title">Lo que hacemos.<br />Sin fluff.</h2>
           </div>
-        </section>
+          <p className="section-desc">
+            Nos enfocamos en tres áreas donde podemos mover la aguja: producto digital de cero a producción,
+            sistemas que tienen que escalar, e infraestructura que no se cae a las 3am.
+          </p>
+        </div>
 
-        <section id="proceso" className="section-process">
-          <div className="section-container">
-            <span className="section-label">How We Work</span>
-            <h2 className="process-title">Un proceso enfocado en resultados</h2>
-            <div className="process-grid">
-              {processSteps.map((step, i) => (
-                <div key={step.num} className="process-item" style={{ animationDelay: `${i * 100}ms` }}>
-                  <span className="process-num">{step.num}</span>
-                  <h4>{step.title}</h4>
-                  <p>{step.desc}</p>
-                </div>
-              ))}
+        <div className="services">
+          <div className="service span-4">
+            <div className="service-idx">S/01</div>
+            <div className="service-icon"><Icon.Code /></div>
+            <h3>Producto digital end-to-end</h3>
+            <p>Desde discovery hasta deploy. Web apps, dashboards internos y SaaS que realmente se usan.</p>
+            <div className="service-viz">
+              <div style={{ color: 'var(--text-3)' }}>// product.ts</div>
+              <div><span style={{ color: '#c9a0ff' }}>export</span> <span style={{ color: 'var(--info)' }}>type</span> <span style={{ color: 'var(--accent)' }}>Deliverable</span> = {'{'}</div>
+              <div style={{ paddingLeft: 16 }}>discovery: <span style={{ color: 'var(--success)' }}>'2 semanas'</span>,</div>
+              <div style={{ paddingLeft: 16 }}>mvp: <span style={{ color: 'var(--success)' }}>'4–6 semanas'</span>,</div>
+              <div style={{ paddingLeft: 16 }}>iteraciones: <span style={{ color: '#c9a0ff' }}>'continuas'</span>,</div>
+              <div style={{ paddingLeft: 16 }}>handoff: <span style={{ color: 'var(--success)' }}>true</span></div>
+              <div>{'}'}</div>
+            </div>
+            <div className="service-tags">
+              <span className="tag">Next.js</span>
+              <span className="tag">React</span>
+              <span className="tag">TypeScript</span>
+              <span className="tag">Tailwind</span>
             </div>
           </div>
-        </section>
 
-        <section id="principios" className="section-principles">
-          <div className="section-container">
-            <span className="section-label">Philosophy</span>
-            <div className="principles-grid">
-              {principles.map((item, i) => (
-                <div key={item.title} className="principle-item" style={{ animationDelay: `${i * 100}ms` }}>
-                  <div className="principle-icon">
-                    {item.icon}
-                  </div>
-                  <h4>{item.title}</h4>
-                  <p>{item.desc}</p>
-                </div>
-              ))}
+          <div className="service span-2">
+            <div className="service-idx">S/02</div>
+            <div className="service-icon"><Icon.Stack /></div>
+            <h3>Backend & APIs</h3>
+            <p>Servicios que respetan tu presupuesto y tu SLA. REST, GraphQL o event-driven.</p>
+            <div className="service-tags">
+              <span className="tag">Node</span>
+              <span className="tag">Go</span>
+              <span className="tag">Postgres</span>
             </div>
           </div>
-        </section>
-      </main>
 
-      <footer className="footer">
-        <div className="section-container">
-          <div className="footer-content">
-            <div className="footer-brand">
-              <strong>Lobami Technologies</strong>
-              <p style={{ color: 'var(--tech-muted)', marginTop: '20px' }}>
-                Diseño, producto e infraestructura para proyectos digitales bien hechos.
-              </p>
+          <div className="service span-2">
+            <div className="service-idx">S/03</div>
+            <div className="service-icon"><Icon.Cloud /></div>
+            <h3>Cloud & DevOps</h3>
+            <p>Infraestructura como código, pipelines de deploy y observabilidad desde el día uno.</p>
+            <div className="service-tags">
+              <span className="tag">AWS</span>
+              <span className="tag">Terraform</span>
+              <span className="tag">Docker</span>
             </div>
-            <a className="footer-contact" href="mailto:hola@lobami.lat">hola@lobami.lat</a>
           </div>
-          
-          <div className="footer-bottom">
-            <div className="footer-social">
-              <a href="https://github.com" target="_blank" rel="noreferrer" aria-label="GitHub">
-                <GithubIcon />
-              </a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
-                <TwitterIcon />
-              </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-                <LinkedinIcon />
-              </a>
+
+          <div className="service span-2">
+            <div className="service-idx">S/04</div>
+            <div className="service-icon"><Icon.Zap /></div>
+            <h3>Performance audit</h3>
+            <p>Diagnóstico profundo de tu stack, cuellos de botella y plan de acción en 7 días.</p>
+            <div className="service-tags">
+              <span className="tag">Lighthouse</span>
+              <span className="tag">Profiling</span>
             </div>
-            <div className="love-mark">
-              HECHO CON <div className="heart-pulse" /> EN LOBAMI 🇲🇽
+          </div>
+
+          <div className="service span-2">
+            <div className="service-idx">S/05</div>
+            <div className="service-icon"><Icon.Shield /></div>
+            <h3>Consultoría técnica</h3>
+            <p>Acompañamos a tu CTO o equipo con arquitectura, reviews y decisiones críticas.</p>
+            <div className="service-tags">
+              <span className="tag">Arquitectura</span>
+              <span className="tag">Code review</span>
             </div>
           </div>
         </div>
-      </footer>
+      </div>
+    </section>
+  );
+}
+
+// =========== WORK VISUALS ===========
+function WorkVisualDashboard({ accent, title }) {
+  return (
+    <div className="viz-dashboard">
+      <div className="viz-tab">
+        <span className="d" style={{ background: '#ff5f57' }} />
+        <span className="d" style={{ background: '#febc2e' }} />
+        <span className="d" style={{ background: '#28c840' }} />
+        <span className="t">{title}</span>
+      </div>
+      <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+        <div style={{ gridColumn: 'span 3', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-3)' }}>$ status</div>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: accent, boxShadow: `0 0 6px ${accent}`, display: 'inline-block' }} />
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-2)' }}>live</span>
+          </div>
+        </div>
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{ background: 'var(--bg-1)', border: '1px solid var(--border-1)', borderRadius: 6, padding: 10, minHeight: 60 }}>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text-3)', marginBottom: 6 }}>METRIC/0{i + 1}</div>
+            <div style={{ fontSize: 18, fontWeight: 500, color: 'var(--text-0)' }}>
+              {['12.4k', '99.98%', '$48k'][i]}
+            </div>
+            <div style={{ height: 3, marginTop: 8, borderRadius: 2, background: 'var(--bg-3)', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: ['72%', '94%', '58%'][i], background: accent, borderRadius: 2 }} />
+            </div>
+          </div>
+        ))}
+        <div style={{ gridColumn: 'span 3', height: 60, background: 'var(--bg-1)', border: '1px solid var(--border-1)', borderRadius: 6, padding: 8, display: 'flex', alignItems: 'flex-end', gap: 4 }}>
+          {Array.from({ length: 32 }).map((_, i) => {
+            const h = 10 + Math.abs(Math.sin(i * 0.7 + 2)) * 32 + Math.abs(Math.sin(i * 0.2)) * 8;
+            return <div key={i} style={{ flex: 1, height: h, background: i > 24 ? accent : 'var(--border-2)', borderRadius: 1 }} />;
+          })}
+        </div>
+      </div>
     </div>
+  );
+}
+
+function WorkVisualMobile({ accent }) {
+  return (
+    <div style={{ width: 160, height: 260, background: 'var(--bg-0)', border: '1px solid var(--border-2)', borderRadius: 20, padding: 10, boxShadow: '0 20px 40px -20px rgba(0,0,0,.6)' }}>
+      <div style={{ height: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 6px', marginBottom: 8 }}>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text-2)' }}>9:41</span>
+        <span style={{ width: 36, height: 5, background: 'var(--bg-3)', borderRadius: 3, display: 'block' }} />
+      </div>
+      <div style={{ background: 'var(--bg-1)', borderRadius: 12, padding: 12, height: 'calc(100% - 26px)' }}>
+        <div style={{ fontSize: 10, color: 'var(--text-3)', fontFamily: 'var(--mono)', marginBottom: 4 }}>balance</div>
+        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.02em' }}>$4,280<span style={{ color: 'var(--text-3)', fontSize: 14 }}>.50</span></div>
+        <div style={{ fontSize: 10, color: accent, fontFamily: 'var(--mono)', marginTop: 2, marginBottom: 14 }}>+12.4% ↑</div>
+        {[0, 1, 2].map(i => (
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderTop: '1px solid var(--border-1)' }}>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--text-0)' }}>{['Transferencia', 'Suscripción', 'Abono'][i]}</div>
+              <div style={{ fontSize: 9, color: 'var(--text-3)', fontFamily: 'var(--mono)' }}>{['hace 2h', 'ayer', '3 mar'][i]}</div>
+            </div>
+            <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: i === 1 ? 'var(--danger)' : 'var(--success)' }}>
+              {['+$420', '−$29', '+$1.2k'][i]}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WorkVisualCode({ accent }) {
+  return (
+    <div style={{ width: '80%', background: 'var(--bg-0)', border: '1px solid var(--border-1)', borderRadius: 8, padding: 16, fontFamily: 'var(--mono)', fontSize: 12, lineHeight: 1.7 }}>
+      <div style={{ color: 'var(--text-3)' }}>// deploy.ts</div>
+      <div>
+        <span style={{ color: '#c9a0ff' }}>const</span>
+        <span style={{ color: 'var(--text-0)' }}> pipeline </span>
+        <span style={{ color: 'var(--text-2)' }}>= </span>
+        <span style={{ color: '#c9a0ff' }}>await </span>
+        <span style={{ color: accent }}>lobami</span>
+        <span style={{ color: 'var(--text-1)' }}>.deploy({'{'}</span>
+      </div>
+      <div style={{ paddingLeft: 16 }}>region: <span style={{ color: 'var(--success)' }}>'us-east-1'</span>,</div>
+      <div style={{ paddingLeft: 16 }}>edge: <span style={{ color: '#c9a0ff' }}>true</span>,</div>
+      <div style={{ paddingLeft: 16 }}>cdn: <span style={{ color: 'var(--success)' }}>'cloudfront'</span>,</div>
+      <div style={{ paddingLeft: 16 }}>db: <span style={{ color: 'var(--success)' }}>'rds-postgres'</span></div>
+      <div>{'})'}</div>
+      <div style={{ color: 'var(--text-3)', marginTop: 8 }}>→ <span style={{ color: 'var(--success)' }}>ok</span> · 2m 14s</div>
+    </div>
+  );
+}
+
+// =========== WORK ===========
+const cases = [
+  {
+    id: 'mercurio',
+    tag: 'FINTECH · 2026',
+    title: 'Mercurio — plataforma de pagos B2B',
+    desc: 'Rediseñamos el core de transacciones de una fintech mexicana. Redujimos latencia p95 de 1.2s a 180ms y construimos un dashboard unificado para 3 equipos.',
+    stack: ['Next.js', 'Go', 'Postgres', 'Kafka'],
+    accent: '#ff9a3c',
+    feature: true,
+    viz: 'dashboard',
+    vizTitle: 'mercurio-dashboard.app',
+  },
+  {
+    id: 'forja',
+    tag: 'SAAS · 2025',
+    title: 'Forja — CRM para fundiciones industriales',
+    desc: 'De Excel a SaaS en 14 semanas. Módulos de inventario, cotización y producción con sync offline.',
+    stack: ['React', 'Node', 'SQLite'],
+    accent: '#7ab8ff',
+    viz: 'mobile',
+  },
+  {
+    id: 'helios',
+    tag: 'INFRA · 2025',
+    title: 'Helios Labs — pipeline de deploys multi-región',
+    desc: 'Migración de Heroku a AWS con IaC completo. Reducción de costos del 42% y zero-downtime desde el día uno.',
+    stack: ['Terraform', 'AWS', 'Go'],
+    accent: '#7ec27e',
+    viz: 'code',
+  },
+];
+
+function Work() {
+  return (
+    <section className="section" id="work">
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="section-label">02 — Trabajo</div>
+            <h2 className="section-title">Casos seleccionados.</h2>
+          </div>
+          <p className="section-desc">
+            Una muestra pequeña de lo que hemos enviado a producción. Nombres cambiados donde aplica NDA;
+            métricas verificables bajo llamada.
+          </p>
+        </div>
+
+        <div className="work-grid">
+          {cases.map(c => (
+            <article key={c.id} className={`work-card ${c.feature ? 'feature' : ''}`}>
+              <div className="work-visual" style={{
+                background: `radial-gradient(ellipse at 30% 20%, ${c.accent}22, transparent 60%), var(--bg-2)`
+              }}>
+                {c.viz === 'dashboard' && <WorkVisualDashboard accent={c.accent} title={c.vizTitle} />}
+                {c.viz === 'mobile' && <WorkVisualMobile accent={c.accent} />}
+                {c.viz === 'code' && <WorkVisualCode accent={c.accent} />}
+              </div>
+              <div className="work-body">
+                <div className="work-meta"><span>{c.tag}</span></div>
+                <h3>{c.title}</h3>
+                <p>{c.desc}</p>
+                <div className="work-foot">
+                  <div className="work-stack">
+                    {c.stack.map(s => <span key={s} className="tag">{s}</span>)}
+                  </div>
+                  <span className="work-cta">ver caso <span className="arr"><Icon.ArrowUpRight /></span></span>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =========== PROCESS ===========
+const steps = [
+  { n: '01', t: 'Discovery', d: 'Entendemos el problema antes de proponer solución. Workshops, entrevistas y benchmark.', time: '1–2 semanas' },
+  { n: '02', t: 'Arquitectura', d: 'Diseño técnico, stack, estimados realistas y plan por hitos. Sin sorpresas.', time: '3–5 días' },
+  { n: '03', t: 'Build', d: 'Sprints de 2 semanas, demos cada viernes, acceso a repo y Linear desde el día uno.', time: '4–12 semanas' },
+  { n: '04', t: 'Launch & Handoff', d: 'Deploy a producción, docs, runbooks y transferencia real al equipo interno.', time: '1 semana' },
+  { n: '05', t: 'Operación', d: 'On-call opcional, mejoras continuas y roadmap trimestral. Tú decides hasta dónde.', time: 'mensual' },
+];
+
+function Process() {
+  return (
+    <section className="section" id="process" style={{ paddingTop: 0 }}>
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="section-label">03 — Proceso</div>
+            <h2 className="section-title">5 pasos.<br />Cero humo.</h2>
+          </div>
+          <p className="section-desc">
+            Trabajamos en ciclos cortos con visibilidad total. Puedes cancelar al final de cualquier sprint
+            —aunque nunca ha pasado.
+          </p>
+        </div>
+
+        <div className="process">
+          <div className="process-row process-head">
+            <div>Fase</div>
+            <div>Nombre</div>
+            <div>Qué pasa</div>
+            <div style={{ textAlign: 'right' }}>Duración</div>
+          </div>
+          {steps.map(s => (
+            <div className="process-row" key={s.n}>
+              <div className="process-num">{s.n}</div>
+              <div className="process-title">{s.t}</div>
+              <div className="process-desc">{s.d}</div>
+              <div className="process-time">{s.time}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =========== STACK ===========
+const stackGroups = [
+  { k: 'Frontend', items: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Framer Motion', 'Astro'] },
+  { k: 'Backend', items: ['Node.js', 'Go', 'Python', 'PostgreSQL', 'Redis', 'Kafka'] },
+  { k: 'Infra', items: ['AWS', 'GCP', 'Terraform', 'Docker', 'Kubernetes', 'Vercel'] },
+  { k: 'Tooling', items: ['Linear', 'GitHub', 'Sentry', 'Grafana', 'Datadog', 'Figma'] },
+];
+
+function Stack() {
+  return (
+    <section className="section" id="stack" style={{ paddingTop: 0 }}>
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <div className="section-label">04 — Stack</div>
+            <h2 className="section-title">Herramientas que elegimos<br />con cuidado.</h2>
+          </div>
+          <p className="section-desc">
+            No somos religiosos con ningún framework, pero sí exigentes. Esto es lo que usamos a diario
+            porque nos deja dormir tranquilos.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1, background: 'var(--border-1)', border: '1px solid var(--border-1)', borderRadius: 16, overflow: 'hidden' }}>
+          {stackGroups.map((g, gi) => (
+            <div key={g.k} style={{ background: 'var(--bg-1)', padding: '28px 24px', minHeight: 280 }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+                <span>{g.k}</span>
+                <span>0{gi + 1}</span>
+              </div>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {g.items.map((it, i) => (
+                  <li key={it} style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--text-1)', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ color: 'var(--text-3)', fontSize: 11 }}>{String(i + 1).padStart(2, '0')}</span>
+                    {it}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =========== CTA ===========
+function CTA() {
+  return (
+    <section className="container" id="contact">
+      <div className="cta-block">
+        <div className="cta-inner">
+          <div className="section-label">// let&apos;s build</div>
+          <h2>¿Tienes un proyecto en mente?</h2>
+          <p>
+            Respondemos en menos de 24 horas hábiles. Si encaja, armamos una llamada de 30 minutos
+            sin obligación para entender el problema y proponer siguiente paso.
+          </p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <a href="mailto:hola@lobami.lat" className="btn btn-primary">
+              hola@lobami.lat <Icon.ArrowUpRight />
+            </a>
+            <a href="#" className="btn btn-secondary">
+              Agendar en Cal.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// =========== FOOTER ===========
+function Footer() {
+  return (
+    <footer className="footer">
+      <div className="container">
+        <div className="footer-grid">
+          <div className="footer-brand">
+            <div className="logo">
+              <span className="logo-mark">L</span>
+              <span>lobami<span style={{ color: 'var(--text-3)' }}>.lat</span></span>
+            </div>
+            <p>Estudio de ingeniería enfocado en producto digital. Remoto, con base en Latinoamérica. Construimos software que el equipo interno puede seguir operando.</p>
+          </div>
+          <div className="footer-col">
+            <h5>Servicios</h5>
+            <ul>
+              <li><a href="#services">Producto digital</a></li>
+              <li><a href="#services">Backend &amp; APIs</a></li>
+              <li><a href="#services">Cloud &amp; DevOps</a></li>
+              <li><a href="#services">Consultoría</a></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h5>Empresa</h5>
+            <ul>
+              <li><a href="#work">Portafolio</a></li>
+              <li><a href="#process">Proceso</a></li>
+              <li><a href="#">Manifiesto</a></li>
+              <li><a href="#">Carreras</a></li>
+            </ul>
+          </div>
+          <div className="footer-col">
+            <h5>Contacto</h5>
+            <ul>
+              <li><a href="mailto:hola@lobami.lat">hola@lobami.lat</a></li>
+              <li><a href="#">GitHub</a></li>
+              <li><a href="#">LinkedIn</a></li>
+              <li><a href="#">X / Twitter</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <div>© 2026 Lobami Technologies · Todos los derechos reservados</div>
+          <div className="footer-status">
+            <span className="status-dot" />
+            <span>Todos los sistemas operativos</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// =========== COMMAND PALETTE ===========
+function CommandPalette({ open, onClose }) {
+  const [query, setQuery] = useState('');
+  const [active, setActive] = useState(0);
+  const inputRef = useRef(null);
+
+  const items = [
+    { group: 'Navegación', label: 'Ir a Servicios', hint: '↵', href: '#services' },
+    { group: 'Navegación', label: 'Ir a Portafolio', hint: '↵', href: '#work' },
+    { group: 'Navegación', label: 'Ir a Proceso', hint: '↵', href: '#process' },
+    { group: 'Navegación', label: 'Ir a Stack', hint: '↵', href: '#stack' },
+    { group: 'Acción', label: 'Enviar email a hola@lobami.lat', hint: '↵', href: 'mailto:hola@lobami.lat' },
+    { group: 'Acción', label: 'Copiar email', hint: '⌘C', action: () => navigator.clipboard?.writeText('hola@lobami.lat') },
+    { group: 'Social', label: 'Abrir GitHub', hint: '↗', href: '#' },
+    { group: 'Social', label: 'Abrir LinkedIn', hint: '↗', href: '#' },
+  ];
+
+  const filtered = items.filter(i => i.label.toLowerCase().includes(query.toLowerCase()));
+
+  useEffect(() => {
+    if (open) {
+      setQuery('');
+      setActive(0);
+      setTimeout(() => inputRef.current?.focus(), 20);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(a => Math.min(a + 1, filtered.length - 1)); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); setActive(a => Math.max(a - 1, 0)); }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const it = filtered[active];
+        if (it?.href) { window.location.href = it.href; onClose(); }
+        if (it?.action) { it.action(); onClose(); }
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, active, filtered, onClose]);
+
+  if (!open) return null;
+
+  const groups = {};
+  filtered.forEach(it => { (groups[it.group] = groups[it.group] || []).push(it); });
+
+  let idx = -1;
+  return (
+    <div className="palette-backdrop" onClick={onClose}>
+      <div className="palette" onClick={e => e.stopPropagation()}>
+        <input
+          ref={inputRef}
+          className="palette-input"
+          placeholder="Buscar o ejecutar comando..."
+          value={query}
+          onChange={e => { setQuery(e.target.value); setActive(0); }}
+        />
+        <div className="palette-list">
+          {Object.keys(groups).length === 0 && (
+            <div style={{ padding: 20, color: 'var(--text-3)', fontFamily: 'var(--mono)', fontSize: 13, textAlign: 'center' }}>
+              No hay resultados.
+            </div>
+          )}
+          {Object.entries(groups).map(([g, list]) => (
+            <div key={g}>
+              <div className="palette-group-label">{g}</div>
+              {list.map(it => {
+                idx++;
+                const a = idx;
+                return (
+                  <div
+                    key={it.label}
+                    className={`palette-item ${a === active ? 'active' : ''}`}
+                    onMouseEnter={() => setActive(a)}
+                    onClick={() => {
+                      if (it.href) window.location.href = it.href;
+                      if (it.action) it.action();
+                      onClose();
+                    }}
+                  >
+                    <span>{it.label}</span>
+                    <span className="kbd-hint">{it.hint}</span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =========== APP ===========
+function hexToRgba(hex, a) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
+export default function App() {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    const r = document.documentElement;
+    r.style.setProperty('--accent', '#ff9a3c');
+    r.style.setProperty('--accent-dim', '#b86b26');
+    r.style.setProperty('--accent-soft', hexToRgba('#ff9a3c', 0.12));
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen(o => !o);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <>
+      <Nav onOpenPalette={() => setPaletteOpen(true)} />
+      <main>
+        <Hero />
+        <Services />
+        <Work />
+        <Process />
+        <Stack />
+        <CTA />
+      </main>
+      <Footer />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+    </>
   );
 }
