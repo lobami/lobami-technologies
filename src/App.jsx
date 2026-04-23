@@ -282,7 +282,7 @@ function Services() {
 }
 
 // =========== WORK VISUALS ===========
-function WorkVisualDashboard({ accent, title }) {
+function WorkVisualDashboard({ accent, title, metrics = ['12.4k', '99.98%', '$48k'], labels = ['RUTAS', 'MIEMBROS', 'KM'] }) {
   return (
     <div className="viz-dashboard">
       <div className="viz-tab">
@@ -301,12 +301,10 @@ function WorkVisualDashboard({ accent, title }) {
         </div>
         {[0, 1, 2].map(i => (
           <div key={i} style={{ background: 'var(--bg-1)', border: '1px solid var(--border-1)', borderRadius: 6, padding: 10, minHeight: 60 }}>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text-3)', marginBottom: 6 }}>METRIC/0{i + 1}</div>
-            <div style={{ fontSize: 18, fontWeight: 500, color: 'var(--text-0)' }}>
-              {['12.4k', '99.98%', '$48k'][i]}
-            </div>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text-3)', marginBottom: 6 }}>{labels[i]}</div>
+            <div style={{ fontSize: 18, fontWeight: 500, color: 'var(--text-0)' }}>{metrics[i]}</div>
             <div style={{ height: 3, marginTop: 8, borderRadius: 2, background: 'var(--bg-3)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: ['72%', '94%', '58%'][i], background: accent, borderRadius: 2 }} />
+              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: ['68%', '84%', '91%'][i], background: accent, borderRadius: 2 }} />
             </div>
           </div>
         ))}
@@ -329,17 +327,17 @@ function WorkVisualMobile({ accent }) {
         <span style={{ width: 36, height: 5, background: 'var(--bg-3)', borderRadius: 3, display: 'block' }} />
       </div>
       <div style={{ background: 'var(--bg-1)', borderRadius: 12, padding: 12, height: 'calc(100% - 26px)' }}>
-        <div style={{ fontSize: 10, color: 'var(--text-3)', fontFamily: 'var(--mono)', marginBottom: 4 }}>balance</div>
-        <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: '-0.02em' }}>$4,280<span style={{ color: 'var(--text-3)', fontSize: 14 }}>.50</span></div>
-        <div style={{ fontSize: 10, color: accent, fontFamily: 'var(--mono)', marginTop: 2, marginBottom: 14 }}>+12.4% ↑</div>
+        <div style={{ fontSize: 10, color: 'var(--text-3)', fontFamily: 'var(--mono)', marginBottom: 4 }}>quincena actual</div>
+        <div style={{ fontSize: 20, fontWeight: 500, letterSpacing: '-0.02em' }}>$8,500<span style={{ color: 'var(--text-3)', fontSize: 13 }}>.00</span></div>
+        <div style={{ fontSize: 10, color: accent, fontFamily: 'var(--mono)', marginTop: 2, marginBottom: 10 }}>ahorro: $1,200 ✓</div>
         {[0, 1, 2].map(i => (
-          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderTop: '1px solid var(--border-1)' }}>
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderTop: '1px solid var(--border-1)' }}>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--text-0)' }}>{['Transferencia', 'Suscripción', 'Abono'][i]}</div>
-              <div style={{ fontSize: 9, color: 'var(--text-3)', fontFamily: 'var(--mono)' }}>{['hace 2h', 'ayer', '3 mar'][i]}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-0)' }}>{['Renta', 'Despensa', 'Meta ahorro'][i]}</div>
+              <div style={{ fontSize: 9, color: 'var(--text-3)', fontFamily: 'var(--mono)' }}>{['15 may', '18 may', 'jun'][i]}</div>
             </div>
-            <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: i === 1 ? 'var(--danger)' : 'var(--success)' }}>
-              {['+$420', '−$29', '+$1.2k'][i]}
+            <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: i === 2 ? accent : 'var(--danger)' }}>
+              {['−$4,200', '−$1,800', '+$1,200'][i]}
             </div>
           </div>
         ))}
@@ -373,23 +371,25 @@ function WorkVisualCode({ accent }) {
 // =========== WORK ===========
 const cases = [
   {
-    id: 'mercurio',
-    tag: 'FINTECH · 2026',
-    title: 'Mercurio — plataforma de pagos B2B',
-    desc: 'Rediseñamos el core de transacciones de una fintech mexicana. Redujimos latencia p95 de 1.2s a 180ms y construimos un dashboard unificado para 3 equipos.',
-    stack: ['Next.js', 'Go', 'Postgres', 'Kafka'],
-    accent: '#ff9a3c',
+    id: 'rutaabierta',
+    tag: 'COMMUNITY · 2025',
+    title: 'Ruta Abierta — comunidad de rutas y aventura',
+    desc: 'Plataforma para descubrir, compartir y explorar rutas de aventura en México. Mapas interactivos, comunidad activa y experiencias verificadas por exploradores reales.',
+    stack: ['Next.js', 'Mapbox', 'Postgres', 'Vercel'],
+    accent: '#5ec27e',
     feature: true,
     viz: 'dashboard',
-    vizTitle: 'mercurio-dashboard.app',
+    vizTitle: 'rutaabierta.xyz',
+    vizMetrics: ['3.2k', '18.5k', '142k'],
+    vizLabels: ['RUTAS', 'MIEMBROS', 'KM EXPL.'],
   },
   {
-    id: 'forja',
-    tag: 'SAAS · 2025',
-    title: 'Forja — CRM para fundiciones industriales',
-    desc: 'De Excel a SaaS en 14 semanas. Módulos de inventario, cotización y producción con sync offline.',
-    stack: ['React', 'Node', 'SQLite'],
-    accent: '#7ab8ff',
+    id: 'saldy',
+    tag: 'FINTECH · 2025',
+    title: 'Saldy — finanzas personales por quincena',
+    desc: 'App de planeación financiera diseñada para el ciclo de pago mexicano. Presupuesto quincenal, calendario de pagos, metas de ahorro y lectura clara del flujo personal.',
+    stack: ['React', 'Node', 'Postgres'],
+    accent: '#ff9a3c',
     viz: 'mobile',
   },
   {
@@ -424,7 +424,7 @@ function Work() {
               <div className="work-visual" style={{
                 background: `radial-gradient(ellipse at 30% 20%, ${c.accent}22, transparent 60%), var(--bg-2)`
               }}>
-                {c.viz === 'dashboard' && <WorkVisualDashboard accent={c.accent} title={c.vizTitle} />}
+                {c.viz === 'dashboard' && <WorkVisualDashboard accent={c.accent} title={c.vizTitle} metrics={c.vizMetrics} labels={c.vizLabels} />}
                 {c.viz === 'mobile' && <WorkVisualMobile accent={c.accent} />}
                 {c.viz === 'code' && <WorkVisualCode accent={c.accent} />}
               </div>
